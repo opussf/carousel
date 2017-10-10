@@ -52,11 +52,15 @@ $widths = array(640, 720, 1000, 1440);
 <html lang="en-US">
 <head>
 <title>Wow Slideshow</title>
+<link type='text/css' href='/css/bootstrap.css' rel='stylesheet'/>
 <link type='text/css' href="wowshots.css" rel="stylesheet"/>
+<script src='/js/bootstrap.min.js'></script>
+<meta name='viewport' content='width=device-width, initial-scale=1'/>
 </head>
 <body>
-<div class="menus">
-<div class="limit_menu">
+<div class='container-fluid'>
+<div class='row menu-row-1'>
+<div class='col-xs-10 menu-limits'>
 <ul><li>Limit to:</li>
 <?php
 # show the limit menu
@@ -70,8 +74,10 @@ foreach( $alimit as $a ) {
 }
 ?>
 </ul>
-</div>
-<div class="time_menu">
+</div> <!-- menu-limits -->
+</div> <!-- menu-row-1 -->
+<div class='row menu-row-2'>
+<div class='col-xs-5 menu-seconds'>
 <ul><li>Seconds:</li>
 <?php
 foreach ( $ams as $m ) {
@@ -83,13 +89,12 @@ foreach ( $ams as $m ) {
 	$m = $m / 1000;
 	print("<li>$linkStart$m$linkEnd</li>");
 }
-
 ?>
 </ul>
-</div>
-<div class="width_menu">
+</div> <!-- menu-seconds -->
+<div class='col-xs-5 menu-width'>
 <ul><li>Width:</li>
-<?php
+<?
 foreach( $widths as $w ) {
 	$linkStart = "<strong><mark>"; $linkEnd = "</mark></strong>";
 	if ($w != $width) {
@@ -101,10 +106,13 @@ foreach( $widths as $w ) {
 ?>
 </ul>
 </div> <!-- width_menu -->
-</div> <!-- Menus -->
-
+</div> <!-- Menu-row-2 -->
+<!--
 <div class="display" style="max-width:1300px">
 <div class="carousel" style="max-width:1000px">
+-->
+<div class='row display-row'>
+<div class='col-xs-9 carousel-col'>
 <?php
 # mySlides divs for content
 $showfiles = array_slice($afiles, -$limit);
@@ -143,8 +151,11 @@ foreach( $showfiles as $file) {
 }
 
 ?>
-</div>
+</div> <!-- corousel-col -->
+<div class='col-xs-3 dateList'>
+<!--
 <div class="dateList" style="max-width:200px">
+-->
 <?php
 $dateCount = array();
 foreach( $afiles as $file) {
@@ -156,8 +167,9 @@ foreach( $dateCount as $k=>$v ) {
 }
 
 ?>
-</div>
-</div>
+</div> <!-- dateList -->
+</div> <!-- display-row -->
+</div>  <!-- container -->
 <!-- carousel script to show the images -->
 <!-- from http://www.w3schools.com/w3css/w3css_slideshow.asp  -->
 <script>
