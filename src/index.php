@@ -11,6 +11,12 @@ if ($_GET["width"]) {
 	$width = intval( $_GET["width"]);
 }
 if (empty($width)) { $width= 640; }
+if (array_key_exists( "startOffset", $_GET )) {
+	$startOffset = intval( $_GET["startOffset"]);
+}
+if ($_GET["endOffset"]) {
+	$endOffset = intval( $_GET["endOffset"]);
+}
 
 $date_parse_format = '\i\m\g\s\/\W\o\W\S\c\r\n\S\h\o\t\_mdy_Gis*';
 
@@ -115,7 +121,11 @@ foreach( $widths as $w ) {
 <div class='col-xs-9 carousel-col'>
 <?php
 # mySlides divs for content
-$showfiles = array_slice($afiles, -$limit);
+if (isset($startOffset) and isset($endOffset)) {
+	$showfiles = array_slice( $afiles, $startOffset, ($endOffset - $startOffset) );
+} else {
+	$showfiles = array_slice($afiles, -$limit);
+}
 
 $lcv = 1; $c = count($showfiles);
 $lastDate = date_create();
@@ -162,8 +172,13 @@ foreach( $afiles as $file) {
 	$date = date_create_from_format( $date_parse_format, $file )->format("D j M Y");
 	$dateCount[$date] = isset($dateCount[$date]) ? $dateCount[$date]+1 : 1;
 }
+$startOffset = 0;
+$endOffset = 0;
 foreach( $dateCount as $k=>$v ) {
-	print("$k -- $v<br/>");
+	$endOffset += $v;
+	print("<a href='?width=$width&ms=$ms&startOffset=$startOffset&endOffset=$endOffset'>$k</a> -- $v<br/>");
+	$startOffset = $endOffset;
+	#print("$k -- $v<br/>");
 }
 
 ?>
