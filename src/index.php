@@ -25,19 +25,27 @@ foreach( $all as $file) {
 }
 
 # build the size limit array
-$alimit = array(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000);
-$lcv = 0;
 $c = count( $afiles );
-foreach( $alimit as $v ) {
-	if ($v >= $c) {
-		$alimit = array_slice($alimit, 0, $lcv);
-		break;
+$alimitsrc = array(1, 2, 5 );
+$alimit = array();
+$pow = 0;
+$lcv = 0;
+$v = $alimitsrc[$lcv] * pow( 10, $pow );
+
+while( $v < $c ) {
+	$alimit[] = $v;
+	$lcv ++;
+	if ($lcv > count( $alimitsrc ) - 1) {
+		$lcv = 0;
+		$pow++;
 	}
-	$lcv++;
+	$v = $alimitsrc[$lcv] * pow( 10, $pow );
 }
 $alimit[] = $c;
 
-$ams = array(100, 200, 300, 400, 500, 800, 1000, 2000);
+
+
+$ams = array(100, 200, 300, 400, 500, 800, 1000, 2000, 5000);
 $widths = array(640, 720, 1000, 1440);
 ?>
 <!DOCTYPE html>
@@ -98,20 +106,33 @@ foreach( $widths as $w ) {
 </div> <!-- width_menu -->
 </div> <!-- Menus -->
 
-<div class="carousel" style="max-width:1000px">
+<div class="carousel" style="max-width:1200px">
 <?php
 # mySlides divs for content
 $afiles = array_slice($afiles, -$limit);
 
 $lcv = 1; $c = count($afiles);
+$lastDate = date_create();
 foreach( $afiles as $file) {
+	$date = date_create_from_format('\i\m\g\s\/\W\o\W\S\c\r\n\S\h\o\t\_mdy_Gis*', $file);
+
+	$interval = date_diff($lastDate, $date);
+	
 	print("<div class=\"mySlides\">");
+	print("<div class=\"img\" style=\"width:1000px\">");
 	if ($width < 1440) {
 		print("<img src=\"mythumb.php?fname=$file&w=$width\" style=\"width:100%\">\n");
 	} else {
 		print("<img lowsrc=\"mythumb.php?fname=$file&w=50\" src=\"$file\" style=\"width:100%\">\n");
 	}
-	print("<div class=\"caption\"><a href=\"$file\">$file  $lcv/$c</a></div>");
+	print("</div>");  # Img
+	$displayName = $date->format( "D j M Y G:i:s" );
+	$diffStr = $interval->format("%a Days %H:%I:%S");
+	$lastDate = $date;
+	
+	print("<div class=\"caption\"><a href=\"$file\">$displayName  $lcv/$c</a>");
+	print(" ($diffStr)");
+	print("</div>");
 	print("</div>");
 	$lcv++;
 }
