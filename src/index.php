@@ -57,8 +57,7 @@ $widths = array(640, 720, 1000, 1440);
 <body>
 <div class="menus">
 <div class="limit_menu">
-<ul>
-<li>Limit to:</li>
+<ul><li>Limit to:</li>
 <?php
 # show the limit menu
 foreach( $alimit as $a ) {
@@ -67,14 +66,13 @@ foreach( $alimit as $a ) {
 		$linkStart = "<a href='index.php?width=$width&limit=$a&ms=$ms'>";
 		$linkEnd = "</a>";
 	}
-	print("<li>$linkStart$a$linkEnd</li>\n");
+	print("<li>$linkStart$a$linkEnd</li>");
 }
 ?>
 </ul>
 </div>
 <div class="time_menu">
-<ul>
-<li>Seconds:</li>
+<ul><li>Seconds:</li>
 <?php
 foreach ( $ams as $m ) {
 	$linkStart = "<strong><mark>"; $linkEnd = "</mark></strong>";
@@ -83,15 +81,14 @@ foreach ( $ams as $m ) {
 		$linkEnd = "</a>";
 	}
 	$m = $m / 1000;
-	print("<li>$linkStart$m$linkEnd</li>\n");
+	print("<li>$linkStart$m$linkEnd</li>");
 }
 
 ?>
 </ul>
 </div>
 <div class="width_menu">
-<ul>
-<li>Width:</li>
+<ul><li>Width:</li>
 <?php
 foreach( $widths as $w ) {
 	$linkStart = "<strong><mark>"; $linkEnd = "</mark></strong>";
@@ -99,7 +96,7 @@ foreach( $widths as $w ) {
 		$linkStart = "<a href='index.php?width=$w&limit=$limit&ms=$ms'>";
 		$linkEnd = "</a>";
 	}
-	print("<li>$linkStart$w$linkEnd</li>\n");
+	print("<li>$linkStart$w$linkEnd</li>");
 }
 ?>
 </ul>
@@ -113,10 +110,16 @@ $afiles = array_slice($afiles, -$limit);
 
 $lcv = 1; $c = count($afiles);
 $lastDate = date_create();
+$now = $lastDate;
 foreach( $afiles as $file) {
 	$date = date_create_from_format('\i\m\g\s\/\W\o\W\S\c\r\n\S\h\o\t\_mdy_Gis*', $file);
 
+	if (!$date) {
+		$date = date_create( '@'.filemtime( $file ) );
+	}
+
 	$interval = date_diff($lastDate, $date);
+	$fromNow = date_diff($now, $date);
 	
 	print("<div class=\"mySlides\">");
 	print("<div class=\"img\" style=\"width:1000px\">");
@@ -128,10 +131,11 @@ foreach( $afiles as $file) {
 	print("</div>");  # Img
 	$displayName = $date->format( "D j M Y G:i:s" );
 	$diffStr = $interval->format("%a Days %H:%I:%S");
+	$fromNow = $fromNow->format("%a Days %H:%I:%S");
 	$lastDate = $date;
 	
 	print("<div class=\"caption\"><a href=\"$file\">$displayName  $lcv/$c</a>");
-	print(" ($diffStr)");
+	print(" - $fromNow ($diffStr)");
 	print("</div>");
 	print("</div>");
 	$lcv++;
