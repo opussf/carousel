@@ -67,12 +67,9 @@
 	</target>
 
 	<target name="changelog" description="Creates a changelog">
-		<echo>git.tag: ${git.tag}</echo>
-		<echo>first  : ${git.firstcommit}</echo>
 		<condition property="logstart" value="${git.tag}" else="${git.firstcommit}">
 			<length string="${git.tag}" when="greater" length="0"/>
 		</condition>
-		<echo>${logstart}</echo>
 		<mkdir dir="${working.dir}"/>
 		<echo file="${working.dir}/changelog.txt">Changes since ${logstart}..${line.separator}${line.separator}</echo>
 		<exec executable="git" dir=".">
