@@ -12,6 +12,7 @@ if ($_GET["width"]) {
 }
 if (empty($width)) { $width= 640; }
 
+$date_parse_format = '\i\m\g\s\/\W\o\W\S\c\r\n\S\h\o\t\_mdy_Gis*';
 
 # build the list of slides
 $img_dir = "imgs";
@@ -42,7 +43,6 @@ while( $v < $c ) {
 	$v = $alimitsrc[$lcv] * pow( 10, $pow );
 }
 $alimit[] = $c;
-
 
 
 $ams = array(100, 200, 300, 400, 500, 800, 1000, 2000, 5000);
@@ -103,16 +103,17 @@ foreach( $widths as $w ) {
 </div> <!-- width_menu -->
 </div> <!-- Menus -->
 
-<div class="carousel" style="max-width:1200px">
+<div class="display" style="max-width:1300px">
+<div class="carousel" style="max-width:1000px">
 <?php
 # mySlides divs for content
-$afiles = array_slice($afiles, -$limit);
+$showfiles = array_slice($afiles, -$limit);
 
-$lcv = 1; $c = count($afiles);
+$lcv = 1; $c = count($showfiles);
 $lastDate = date_create();
 $now = $lastDate;
-foreach( $afiles as $file) {
-	$date = date_create_from_format('\i\m\g\s\/\W\o\W\S\c\r\n\S\h\o\t\_mdy_Gis*', $file);
+foreach( $showfiles as $file) {
+	$date = date_create_from_format($date_parse_format, $file);
 
 	if (!$date) {
 		$date = date_create( '@'.filemtime( $file ) );
@@ -142,6 +143,20 @@ foreach( $afiles as $file) {
 }
 
 ?>
+</div>
+<div class="dateList" style="max-width:200px">
+<?php
+$dateCount = array();
+foreach( $afiles as $file) {
+	$date = date_create_from_format( $date_parse_format, $file )->format("D j M Y");
+	$dateCount[$date] = isset($dateCount[$date]) ? $dateCount[$date]+1 : 1;
+}
+foreach( $dateCount as $k=>$v ) {
+	print("$k -- $v<br/>");
+}
+
+?>
+</div>
 </div>
 <!-- carousel script to show the images -->
 <!-- from http://www.w3schools.com/w3css/w3css_slideshow.asp  -->
