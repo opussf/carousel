@@ -100,11 +100,11 @@
 	</target>
 
 	<target name="deploy" depends="package" description="deploys the web site">
+		<exec executable="rsync" dir="${package.dir}" failonerror="true">
+			<arg line='-rvihz --delete --rsh="/usr/bin/ssh -l ${USER} -p ${ssh.port}" . ${USER}@${HOST}:${DIR}'/>
+		</exec>
 		<exec executable="rsync" dir="${target.dir}" failonerror="true">
 			<arg line='-rvihz --rsh="/usr/bin/ssh -l ${USER} -p ${ssh.port}" ${project.zip} ${USER}@${HOST}:${DIR}'/>
-		</exec>
-		<exec executable="rsync" dir="${package.dir}" failonerror="true">
-			<arg line='-rvihz --rsh="/usr/bin/ssh -l ${USER} -p ${ssh.port}" . ${USER}@${HOST}:${DIR}'/>
 		</exec>
 	</target>
 
